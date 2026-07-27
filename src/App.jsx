@@ -1,12 +1,14 @@
 import { useState } from "react";
 import Home from "./pages/Home";
 import "./App.css";
+import { createFreshDeck } from "./logic/tiles";
+console.log(createFreshDeck());
 
 function App() {
   const [screen, setScreen] = useState("home");
 
   const handleStartGame = () => {
-    setScreen("game"); // we'll build the Game page in the next steps
+    setScreen("game"); 
   };
 
   return (
