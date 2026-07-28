@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { createShuffledDeck, drawHand, calculateHandValue, resolveBet, reshuffleDeck } from "../logic/gameLogic";
 import { scaleHandTiles } from "../logic/tiles";
+import { saveScore } from "../logic/leaderboard";
 
 function Game({ onExit }) {
   const [drawPile, setDrawPile] = useState(() => createShuffledDeck());
@@ -14,6 +15,8 @@ function Game({ onExit }) {
   const [message, setMessage] = useState("Place your bet!");
   const [isGameOver, setIsGameOver] = useState(false);
   const [gameOverReason, setGameOverReason] = useState("");
+  const [playerName, setPlayerName] = useState("");
+  const [scoreSaved, setScoreSaved] = useState(false);
 
   const currentValue = calculateHandValue(currentHand);
 
@@ -62,12 +65,32 @@ function Game({ onExit }) {
     }
   };
 
-  if (isGameOver) {
+if (isGameOver) {
+    const handleSaveScore = () => {
+      saveScore(playerName, score);
+      setScoreSaved(true);
+    };
+
     return (
       <div className="game-over">
         <h1>Game Over</h1>
         <p>{gameOverReason}</p>
         <h2>Final Score: {score}</h2>
+
+        {!scoreSaved ? (
+          <div className="save-score">
+            <input
+              type="text"
+              placeholder="Enter your name"
+              value={playerName}
+              onChange={(e) => setPlayerName(e.target.value)}
+            />
+            <button onClick={handleSaveScore}>Save Score</button>
+          </div>
+        ) : (
+          <p>✅ Score saved to leaderboard!</p>
+        )}
+
         <button className="exit-btn" onClick={onExit}>Back to Home</button>
       </div>
     );

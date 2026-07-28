@@ -105,3 +105,26 @@
 .game-over h1 {
   color: #ff5252;
 }
+
+.save-score {
+  margin: 20px 0;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.save-score input {
+  padding: 8px;
+  border-radius: 6px;
+  border: none;
+  font-size: 14px;
+}
+
+.save-score button {
+  padding: 8px 16px;
+  background: #4caf50;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+}

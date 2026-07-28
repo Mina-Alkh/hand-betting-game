@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
+import { getLeaderboard } from "../logic/leaderboard";
 
 function Home({ onStartGame }) {
   const [leaderboard, setLeaderboard] = useState([]);
 
   useEffect(() => {
-    const saved = JSON.parse(localStorage.getItem("leaderboard")) || [];
-    setLeaderboard(saved);
+    setLeaderboard(getLeaderboard());
   }, []);
 
   return (
