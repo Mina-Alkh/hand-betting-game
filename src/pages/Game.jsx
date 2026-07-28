@@ -17,6 +17,7 @@ function Game({ onExit }) {
   const [gameOverReason, setGameOverReason] = useState("");
   const [playerName, setPlayerName] = useState("");
   const [scoreSaved, setScoreSaved] = useState(false);
+  const [history, setHistory] = useState([]);
 
   const currentValue = calculateHandValue(currentHand);
 
@@ -59,6 +60,11 @@ function Game({ onExit }) {
     setScore((prev) => prev + (result === "win" ? 10 : -5));
     setMessage(result === "win" ? "You won that round!" : "You lost that round!");
 
+    setHistory((prev) => [
+      { hand: currentHand, value: currentValue, bet, result },
+      ...prev,
+    ].slice(0, 5));
+
     if (hitLimit) {
       const badTile = updatedNextHand.find((tile) => tile.value <= 0 || tile.value >= 10);
       endGame(`A tile ("${badTile.name}") reached value ${badTile.value}!`);
@@ -88,7 +94,7 @@ if (isGameOver) {
             <button onClick={handleSaveScore}>Save Score</button>
           </div>
         ) : (
-          <p>✅ Score saved to leaderboard!</p>
+          <p>Score saved to leaderboard!</p>
         )}
 
         <button className="exit-btn" onClick={onExit}>Back to Home</button>
@@ -124,7 +130,32 @@ if (isGameOver) {
         <button onClick={() => handleBet("higher")}>Bet Higher</button>
         <button onClick={() => handleBet("lower")}>Bet Lower</button>
       </div>
+
+      <div className="history">
+        <h3>History</h3>
+        <div className="history-list">
+          {history.length === 0 ? (
+            <p>No rounds played yet.</p>
+          ) : (
+            history.map((entry, index) => (
+              <div key={index} className={`history-entry ${entry.result}`}>
+                <div className="history-tiles">
+                  {entry.hand.map((tile) => (
+                    <div key={tile.id} className="mini-tile">
+                      {tile.name}
+                    </div>
+                  ))}
+                </div>
+                <span>Value: {entry.value} | Bet: {entry.bet} | {entry.result === "win" ? "✅" : "❌"}</span>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+
     </div>
+
+    
   );
 }
 

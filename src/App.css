@@ -128,3 +128,45 @@
   color: white;
   cursor: pointer;
 }
+
+.history {
+  margin-top: 30px;
+  max-width: 500px;
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.history-entry {
+  background: #2a2a40;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.history-entry.win {
+  border-left: 4px solid #4caf50;
+}
+
+.history-entry.lose {
+  border-left: 4px solid #ff5252;
+}
+
+.history-tiles {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.mini-tile {
+  background: #444466;
+  padding: 4px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+}
