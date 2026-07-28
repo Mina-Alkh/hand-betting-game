@@ -96,3 +96,12 @@
 .bet-buttons button:hover {
   background: #43a047;
 }
+
+.game-over {
+  text-align: center;
+  color: white;
+}
+
+.game-over h1 {
+  color: #ff5252;
+}

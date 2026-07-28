@@ -1,39 +1,77 @@
 import { useState } from "react";
-import { createShuffledDeck, drawHand, calculateHandValue, resolveBet } from "../logic/gameLogic";
+import { createShuffledDeck, drawHand, calculateHandValue, resolveBet, reshuffleDeck } from "../logic/gameLogic";
 import { scaleHandTiles } from "../logic/tiles";
 
 function Game({ onExit }) {
   const [drawPile, setDrawPile] = useState(() => createShuffledDeck());
   const [discardPile, setDiscardPile] = useState([]);
+  const [reshuffleCount, setReshuffleCount] = useState(0);
   const [currentHand, setCurrentHand] = useState(() => {
     const { hand } = drawHand(createShuffledDeck(), 3);
     return hand;
   });
   const [score, setScore] = useState(0);
   const [message, setMessage] = useState("Place your bet!");
+  const [isGameOver, setIsGameOver] = useState(false);
+  const [gameOverReason, setGameOverReason] = useState("");
 
   const currentValue = calculateHandValue(currentHand);
 
-  const handleBet = (bet) => {
-    const { hand: nextHand, remainingDrawPile } = drawHand(drawPile, 3);
+  const endGame = (reason) => {
+    setIsGameOver(true);
+    setGameOverReason(reason);
+  };
 
-    if (nextHand.length < 3) {
-      setMessage("Not enough tiles! (We'll fix this with reshuffle logic next)");
-      return;
+  const handleBet = (bet) => {
+    if (isGameOver) return; 
+
+    let pileToUse = drawPile;
+    let updatedDiscard = discardPile;
+    let updatedReshuffleCount = reshuffleCount;
+
+    if (pileToUse.length < 3) {
+      updatedReshuffleCount += 1;
+
+      if (updatedReshuffleCount >= 3) {
+        setReshuffleCount(updatedReshuffleCount);
+        endGame("Draw pile reshuffled 3 times.");
+        return;
+      }
+
+      pileToUse = reshuffleDeck(updatedDiscard);
+      updatedDiscard = [];
     }
 
+    const { hand: nextHand, remainingDrawPile } = drawHand(pileToUse, 3);
     const nextValue = calculateHandValue(nextHand);
     const { result } = resolveBet(currentValue, nextValue, bet);
-
     const updatedNextHand = scaleHandTiles(nextHand, result);
 
-    setDiscardPile((prev) => [...prev, ...currentHand]);
+    const hitLimit = updatedNextHand.some((tile) => tile.value <= 0 || tile.value >= 10);
 
+    setDiscardPile([...updatedDiscard, ...currentHand]);
     setDrawPile(remainingDrawPile);
+    setReshuffleCount(updatedReshuffleCount);
     setCurrentHand(updatedNextHand);
     setScore((prev) => prev + (result === "win" ? 10 : -5));
     setMessage(result === "win" ? "You won that round!" : "You lost that round!");
+
+    if (hitLimit) {
+      const badTile = updatedNextHand.find((tile) => tile.value <= 0 || tile.value >= 10);
+      endGame(`A tile ("${badTile.name}") reached value ${badTile.value}!`);
+    }
   };
+
+  if (isGameOver) {
+    return (
+      <div className="game-over">
+        <h1>Game Over</h1>
+        <p>{gameOverReason}</p>
+        <h2>Final Score: {score}</h2>
+        <button className="exit-btn" onClick={onExit}>Back to Home</button>
+      </div>
+    );
+  }
 
   return (
     <div className="game">
@@ -45,6 +83,7 @@ function Game({ onExit }) {
       <div className="pile-info">
         <span>Draw Pile: {drawPile.length}</span>
         <span>Discard Pile: {discardPile.length}</span>
+        <span>Reshuffles: {reshuffleCount} / 3</span>
       </div>
 
       <div className="hand">

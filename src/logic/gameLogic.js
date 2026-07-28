@@ -36,3 +36,9 @@ export function resolveBet(currentValue, nextValue, bet) {
 
   return { result, nextValue };
 }
+
+export function reshuffleDeck(discardPile) {
+  const freshDeck = createFreshDeck();
+  const combined = [...discardPile, ...freshDeck];
+  return shuffle(combined);
+}
