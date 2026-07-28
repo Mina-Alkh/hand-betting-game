@@ -36,3 +36,13 @@ export function createBaseTileSet() {
 export function createFreshDeck() {
   return createBaseTileSet().map((tile) => ({ ...tile })); 
 }
+
+export function scaleHandTiles(hand, result) {
+  return hand.map((tile) => {
+    if (tile.type === "honor") {
+      const change = result === "win" ? 1 : -1;
+      return { ...tile, value: tile.value + change };
+    }
+    return tile;
+  });
+}
