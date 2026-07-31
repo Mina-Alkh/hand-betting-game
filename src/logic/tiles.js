@@ -1,3 +1,21 @@
+const CDN_BASE = "https://cdn.jsdelivr.net/gh/FluffyStuff/riichi-mahjong-tiles/Regular";
+
+const suitFilePrefix = {
+  Characters: "Man",
+  Bamboo: "Sou",
+  Dots: "Pin",
+};
+
+const honorFileNames = {
+  "East Wind": "Ton",
+  "South Wind": "Nan",
+  "West Wind": "Shaa",
+  "North Wind": "Pei",
+  "Red Dragon": "Chun",
+  "Green Dragon": "Hatsu",
+  "White Dragon": "Haku",
+};
+
 const suits = ["Dots", "Bamboo", "Characters"];
 
 function generateNumberTiles() {
@@ -8,7 +26,8 @@ function generateNumberTiles() {
         id: `${suit}-${value}`,
         type: "number",
         name: `${value} ${suit}`,
-        value: value, 
+        value: value,
+        image: `${CDN_BASE}/${suitFilePrefix[suit]}${value}.svg`,
       });
     }
   });
@@ -19,14 +38,13 @@ function generateHonorTiles() {
   const dragons = ["Red Dragon", "Green Dragon", "White Dragon"];
   const winds = ["East Wind", "South Wind", "West Wind", "North Wind"];
 
-  const honorTiles = [...dragons, ...winds].map((name) => ({
+  return [...dragons, ...winds].map((name) => ({
     id: name.replace(/\s+/g, "-"),
     type: "honor",
     name,
-    value: 5, 
+    value: 5,
+    image: `${CDN_BASE}/${honorFileNames[name]}.svg`,
   }));
-
-  return honorTiles;
 }
 
 export function createBaseTileSet() {
@@ -34,7 +52,7 @@ export function createBaseTileSet() {
 }
 
 export function createFreshDeck() {
-  return createBaseTileSet().map((tile) => ({ ...tile })); 
+  return createBaseTileSet().map((tile) => ({ ...tile }));
 }
 
 export function scaleHandTiles(hand, result) {
