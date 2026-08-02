@@ -51,8 +51,13 @@ export function createBaseTileSet() {
   return [...generateNumberTiles(), ...generateHonorTiles()];
 }
 
+let instanceCounter = 0;
+
 export function createFreshDeck() {
-  return createBaseTileSet().map((tile) => ({ ...tile }));
+  return createBaseTileSet().map((tile) => ({
+    ...tile,
+    uid: `${tile.id}-${Date.now()}-${instanceCounter++}`,
+  }));
 }
 
 export function scaleHandTiles(hand, result) {

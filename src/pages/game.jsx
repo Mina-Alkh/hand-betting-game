@@ -129,6 +129,8 @@ function game({ onExit }) {
     );
   }
 
+  console.log("currentHand length:", currentHand.length, currentHand);
+
   return (
     <div className="game">
       <div className="game-topbar">
@@ -160,7 +162,7 @@ function game({ onExit }) {
                 <div key={index} className={`history-entry ${entry.result}`}>
                   <div className="history-tiles">
                     {entry.hand.map((tile) => (
-                      <img key={tile.id} src={tile.image} alt={tile.name} className="mini-tile-image" />
+                      <img key={tile.uid} src={tile.image} alt={tile.name} className="mini-tile-image" />
                     ))}
                   </div>
                   <span className="history-points">
@@ -190,7 +192,7 @@ function game({ onExit }) {
               <div className="tiles">
                 {previousHand ? (
                   previousHand.map((tile) => (
-                    <div key={tile.id} className="tile discarded">
+                    <div key={tile.uid} className="tile discarded">
                       <img src={tile.image} alt={tile.name} className="tile-image" />
                       <span className="tile-name">{tile.name}</span>
                       <span className="tile-value">{tile.value}</span>
@@ -210,7 +212,7 @@ function game({ onExit }) {
             </div>
             <div className="tiles">
               {currentHand.map((tile) => (
-                <div key={tile.id} className={`tile new ${tile.type}`}>
+                <div key={tile.uid} className={`tile new ${tile.type}`}>
                   <img src={tile.image} alt={tile.name} className="tile-image" />
                   <span className="tile-name">{tile.name}</span>
                   <span className="tile-value">{tile.value}</span>
